@@ -11,7 +11,8 @@ public class Hierholzer {
     static private Graph graph;
     private LinkedList<Integer> eulerianCycle;
     private LinkedList<Integer> cicloSimples;
-
+    
+   
     static void slow() {
         try {
             Thread.sleep(1000);
@@ -37,36 +38,39 @@ public class Hierholzer {
         int novoVizinho;
         cicloSimples = new LinkedList<Integer>(); 
         cicloSimples.add(atual);
-
-        do {
+        Color c = getRadomColor();
+        do{
             Edge arestaVizinha = graph.getNeighbours(atual).get(0);
             novoVizinho = arestaVizinha.getV();
             
             atual = novoVizinho;
-            graph.markNode(atual, getRadomColor());
+            graph.markNode(atual, c);
+            slow();
             slow();
             cicloSimples.add(atual);
             graph.removeEdge(arestaVizinha);
  
-        } while (novoVizinho != startVertice);
+        }while(novoVizinho != startVertice);
         CycleToString(cicloSimples);
         return cicloSimples;    
     }
 
     public LinkedList<Integer> SearchEulerianCycle(int startVertice) {
         if(graph.isEulerian()){
+             int i=0;
+        
+             eulerianCycle = new LinkedList<Integer>(); 
+             eulerianCycle = SearchSimpleCycle(startVertice);
+
+             while(graph.existEdges()){
+          
+                InsertCycle(SearchSimpleCycle(eulerianCycle.get(i)), i);
+            }
             
         }else{
-           graph.turnEulerian();
+             graph.turnEulerian();
         }
-        int i=1;
-        eulerianCycle = new LinkedList<Integer>(); 
-        eulerianCycle = SearchSimpleCycle(startVertice);
-        while(graph.existEdges()){
-           
-           InsertCycle(SearchSimpleCycle(eulerianCycle.get(i)), i);
-           i++;   
-        }         
+
         return eulerianCycle;
     }
 
@@ -204,20 +208,23 @@ public class Hierholzer {
 
     public void test7() {
         Hierholzer hierholzer = new Hierholzer();
-        // hierholzer.test5(0);
+        // -------------------
+         //hierholzer.test5(0);
 
-        // graph = new Graph("grafo.csv", "white.png", "Roteamento");
-        // graph = new Graph("grafo1.csv", "white.png", "Roteamento");
-        // graph = new Graph("grafoMapa1.csv", "mapa1.png", "Roteamento");
+         //graph = new Graph("grafo.csv", "white.png", "Roteamento");
+         //graph = new Graph("grafo1.csv", "white.png", "Roteamento");
+         //graph = new Graph("grafoMapa1.csv", "mapa1.png", "Roteamento");
+        // -------------------
         graph = new Graph("grafoMapa2.csv", "mapa2.png", "Roteamento");
 
         System.out.println();
         LinkedList<Integer> eulerianCycle = hierholzer.SearchEulerianCycle(0);
         System.out.println("Ciclo Final:");
         System.out.println(Hierholzer.CycleToString(eulerianCycle));
-
-        // Graph graph2 = new Graph(graph.getGraphics(), "white.png", "Rota Final");
-        // Graph graph2 = new Graph(graph.getGraphics(), "mapa1.png", "Rota Final");
+        // -------------------
+         //Graph graph2 = new Graph(graph.getGraphics(), "white.png", "Rota Final");
+         // Graph graph2 = new Graph(graph.getGraphics(), "mapa1.png", "Rota Final");
+        // -------------------
         Graph graph2 = new Graph(graph.getGraphics(), "mapa2.png", "Rota Final");
         for (Integer i : eulerianCycle) {
             slow();
